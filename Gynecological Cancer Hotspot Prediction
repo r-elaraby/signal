@@ -1,0 +1,47 @@
+% Read input amino acid sequence 
+seq = input('Enter amino acid sequence: ','s');
+
+% Convert to numeric values 
+[numSeq,seqLen] = aa2num(seq); 
+
+% Apply Gaussian filter
+gaussSeq = gaussfilt(numSeq,3,2);
+
+% Calculate hydrophobicity 
+hydSeq = hyd(numSeq); 
+
+% Apply mean filter
+meanSeq = meanfilt(hydSeq,5);
+
+% Calculate polarity
+polSeq = pol(numSeq);
+
+% Apply median filter 
+medSeq = medfilt(polSeq,5);
+
+% Calculate exposed surface area 
+esaSeq = esa(numSeq);
+
+% Integrate all metrics
+intSeq = gaussSeq + meanSeq + medSeq + esaSeq;
+
+% Identify peaks as hotspot locations
+[pks,locs] = findpeaks(intSeq,'MinPeakHeight',mean(intSeq)+std(intSeq));
+
+% Display results
+subplot(2,1,1); plot(intSeq); 
+title('Integrated plot');
+subplot(2,1,2); stem(locs,pks);
+title('Hotspot locations');
+
+
+##This code does the following:
+
+#1. Read the input amino acid sequence from the user. 
+#2. Convert the sequence to numeric values using the aa2num function. 
+#3. Apply Gaussian filter to smooth the sequence. 
+#4. Calculate various metrics like hydrophobicity, polarity, exposed surface area. 
+#5. Apply mean, median and other filters to the metrics.
+###6. Integrate all the metrics into a single plot. 
+####7. Identify peaks in the integrated plot using findpeaks function. The peaks indicate hotspot locations.
+####8. Display the results - integrated plot and hotspot locations.
